@@ -34,6 +34,12 @@ const Login = () => {
         alert("로그인 성공");
         setLoading(false);
         sessionStorage.setItem('email', email);
+        sessionStorage.setItem('uid', success.user.uid);
+        if(sessionStorage.getItem('target')) {
+          navi(sessionStorage.getItem('target'));
+        }else{
+          navi('/');
+        }
         navi('/')
       })
       .catch(error=>{

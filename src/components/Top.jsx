@@ -3,7 +3,7 @@ import React from 'react'
 const Top = () => {
     return (
         <div>
-            <img src="/images/pic.png" width="100%"/>
+            <img src="/images/IMG.png" width="100%"/>
         </div>
     )
 }

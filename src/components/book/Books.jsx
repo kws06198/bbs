@@ -2,8 +2,14 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import {Row, Col, Card, InputGroup, Form, Button} from 'react-bootstrap'
 import { BsCart4 } from "react-icons/bs";
+import { useNavigate } from 'react-router-dom';
+import {app} from '../../firebaselnit'
+import { getDatabase, ref, set, get } from 'firebase/database'
 
 const Books = () => {
+  const db = getDatabase(app);
+  const navi = useNavigate();
+  const uid=sessionStorage.getItem('uid');
   const [page, setPage] = useState(1);
   const [query, setQuery] = useState('자바');
   const [loading, setLoading] = useState(false);
@@ -30,6 +36,24 @@ const Books = () => {
     callAPI();
   }
 
+  const onClickCart = (book) => {
+    if(uid){
+      if(window.confirm(`${book.title}도서를 장바구니에 넣겠습니까?`)){
+        get(ref(db, `cart/${uid}/${book.isbn}`)).then(snapshot=>{
+          if(snapshot.exists()){
+            alert("이미 장바구니에 있습니다!");
+          }else{
+            set(ref(db, `cart/${uid}/${book.isbn}`), {...book});
+            alert("성공하였습니다!");
+          }
+        });
+      }
+    }else{
+      sessionStorage.setItem('target', '/books');
+      navi('/login');
+    }
+  }
+
   if(loading) return <h1 className='my-5'>로딩중입니다...</h1>
   return (
     <div>
@@ -47,14 +71,16 @@ const Books = () => {
       </Row>
       <Row>
         {books.map(book=>
-          <Col xs={6} md={3} lg={2} className='mb-2'>
+          <Col key={book.isbn} xs={6} md={3} lg={2} className='mb-2'>
             <Card>
               <Card.Body>
-               <img src={book.thumbnail || 'http://via.placeholder.com/120x170'} />
+               <img width="90%"
+                    src={book.thumbnail || 'http://via.placeholder.com/120x170'} />
               </Card.Body>
               <Card.Footer>
                 <div className='ellipsis'>{book.title}</div>
-                <BsCart4 style={{cursor:'pointer', fontSize:'20px', color:'green'}}/>
+                <BsCart4 onClick={()=>onClickCart(book)} 
+                    style={{cursor:'pointer', fontSize:'20px', color:'green'}}/>
               </Card.Footer>
             </Card>
           </Col>
