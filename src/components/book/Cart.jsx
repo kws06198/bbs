@@ -55,6 +55,7 @@ const Cart = () => {
         )}
         </thead>
       </Table>
+      
     </div>
   )
 }
