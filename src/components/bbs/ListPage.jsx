@@ -27,7 +27,7 @@ const ListPage = () => {
             const start = (page - 1) * size + 1;
             const end = (page * size);
 
-            let data=rows.map((row,index)=>row && {seq:no-index, ...row});
+            let data = rows.map((row, index) => row && { seq: no - index, ...row });
             data = data.filter(row => row.no >= start && row.no <= end);
             setCount(no);
             setPosts(data);
@@ -49,6 +49,7 @@ const ListPage = () => {
                         </a>
                     </div>
                 }
+
                 <Table>
                     <thead>
                         <tr>
@@ -69,6 +70,7 @@ const ListPage = () => {
                         )}
                     </tbody>
                 </Table>
+
                 <Pagination className="pagination"
                     activePage={page}
                     itemsCountPerPage={size}
